@@ -24,6 +24,9 @@ function renderWaterfall(rootNode, columnCount = 3, gap = 20) {
     styleTag.appendChild(document.createTextNode(css));
     document.body.appendChild(styleTag);
 
+    // Запоминаем что нам нужно разложить
+    const letters = Array.from(rootNode.children);
+
     const allGapsWidth = gap * (columnCount - 1);
     const columnWidth = (rootNode.offsetWidth - allGapsWidth) / columnCount;
 
@@ -39,11 +42,12 @@ function renderWaterfall(rootNode, columnCount = 3, gap = 20) {
     // Чтобы не считать каждый раз высоту колоки, просто запоминаем
     const columnsHeight = new Array(columnCount).fill(0);
 
-    while (rootNode.children.length) {
+    // Пока есть неразложенные элементы
+    while(letters.length) {
         // Ищем подходящую колонку
         const idx = findBestColumnIndex(columnsHeight);
         // Добавляем в неё объявление
-        columnsElements[idx].appendChild(rootNode.children[0]);
+        columnsElements[idx].appendChild(letters.shift());
         // И обновляем высоту
         columnsHeight[idx] = columnsElements[idx].offsetHeight;
     }
